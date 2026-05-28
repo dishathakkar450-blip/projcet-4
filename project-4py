@@ -1,0 +1,379 @@
+# ============================================================
+#  Project   : Functional Treat
+#  Program   : Data Analyzer and Transformer
+#  Author    : thakkar disha
+# ============================================================
+
+# ---------- Global Variable (Requirement F) ----------
+dataset_summary = {
+    "total_values": 0,
+    "overall_mean": 0.0
+}
+
+# =====================================================================
+# A. Built-in Functions  +  B. User-defined Functions (UDF)
+# =====================================================================
+
+def display_data_summary(data):
+    """
+    Displays basic statistics about a 1-D list using Python built-in
+    functions: len(), min(), max(), sum().
+    Updates the global dataset_summary dictionary.
+    """
+    global dataset_summary
+
+    total   = len(data)
+    minimum = min(data)
+    maximum = max(data)
+    total_sum = sum(data)
+
+    # Update global summary
+    dataset_summary["total_values"] = total
+    dataset_summary["overall_mean"] = round(total_sum / total, 2)
+
+    print("\nData Summary:")
+    print(f"- Total elements: {total}")
+    print(f"- Minimum value : {minimum}")
+    print(f"- Maximum value : {maximum}")
+    print(f"- Sum of all values: {total_sum}")
+
+
+def calculate_average(data):
+    """
+    User-defined function that calculates and returns the average
+    of a list of numbers.
+    """
+    return sum(data) / len(data)
+
+
+def find_duplicates(data):
+    """
+    User-defined function that finds and returns duplicate values
+    in a 1-D list.
+    """
+    seen = set()
+    duplicates = set()
+    for item in data:
+        if item in seen:
+            duplicates.add(item)
+        seen.add(item)
+    return list(duplicates)
+
+
+def display_unique_values(data):
+    """
+    User-defined function that displays unique values from the list.
+    """
+    unique = list(set(data))
+    print(f"\nUnique values: {unique}")
+
+
+# =====================================================================
+# C. *args, **kwargs, and __doc__
+# =====================================================================
+
+def accept_multiple_values(*args):
+    """
+    Accepts multiple values using *args and displays them.
+    Demonstrates use of *args in a function definition.
+    """
+    print("\nValues passed via *args:")
+    for i, val in enumerate(args, 1):
+        print(f"  Value {i}: {val}")
+
+
+def print_dataset_characteristics(**kwargs):
+    """
+    Prints key-value pairs as a summary of dataset characteristics.
+    Demonstrates use of **kwargs in a function definition.
+    """
+    print("\nDataset Characteristics:")
+    for key, value in kwargs.items():
+        print(f"  {key}: {value}")
+
+
+def show_function_doc(func):
+    """
+    Prints the __doc__ string of a given function.
+    """
+    print(f"\n[Doc] {func.__name__}: {func.__doc__}")
+
+
+# =====================================================================
+# D. Recursion
+# =====================================================================
+
+def factorial(n):
+    """
+    Recursively calculates the factorial of a non-negative integer n.
+    Base case : factorial(0) = 1
+    Recursive  : factorial(n) = n * factorial(n-1)
+    """
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
+
+
+def fibonacci(n):
+    """
+    Recursively returns the n-th Fibonacci number (0-indexed).
+    Base cases : fibonacci(0) = 0, fibonacci(1) = 1
+    Recursive  : fibonacci(n) = fibonacci(n-1) + fibonacci(n-2)
+    """
+    if n < 0:
+        raise ValueError("Fibonacci is not defined for negative indices.")
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+# =====================================================================
+# E. Lambda Functions  (with map() and filter())
+# =====================================================================
+
+def filter_by_threshold(data, threshold):
+    """
+    Uses a lambda function together with filter() to return only those
+    values in 'data' that are >= threshold.
+    """
+    filter_func = lambda x: x >= threshold          # lambda definition
+    filtered    = list(filter(filter_func, data))   # filter() usage
+    return filtered
+
+
+def double_values(data):
+    """
+    Uses a lambda function together with map() to double every value
+    in the list and return the result.
+    """
+    double_func = lambda x: x * 2
+    doubled     = list(map(double_func, data))
+    return doubled
+
+
+# =====================================================================
+# G. Return Multiple Values
+# =====================================================================
+
+def get_dataset_statistics(data):
+    """
+    Returns multiple statistics about the dataset as a tuple:
+    (minimum, maximum, total_sum, average).
+    Demonstrates returning multiple values from a single function.
+    """
+    minimum   = min(data)
+    maximum   = max(data)
+    total_sum = sum(data)
+    average   = round(calculate_average(data), 2)
+    return minimum, maximum, total_sum, average   # multiple return values
+
+
+# =====================================================================
+# H. 1-D and 2-D Array (List) helpers
+# =====================================================================
+
+def input_1d_data():
+    """
+    Prompts the user to enter space-separated numbers for a 1-D list
+    or choose sample data.
+    Returns a list of floats/ints.
+    """
+    print("\nData Input Options:")
+    print("  1. Enter values manually")
+    print("  2. Use sample data  [34, 12, 56, 78, 43, 21, 90]")
+    choice = input("Choose an option: ").strip()
+
+    if choice == "2":
+        data = [34, 12, 56, 78, 43, 21, 90]
+        print(f"Sample data loaded: {data}")
+    else:
+        raw  = input("Enter data for a 1D array (separated by spaces): ")
+        data = [float(x) if '.' in x else int(x) for x in raw.split()]
+
+    return data
+
+
+def input_2d_data():
+    """
+    Prompts the user to enter a 2-D (nested) list row by row,
+    or choose sample data.
+    Returns a 2-D list of numbers.
+    """
+    print("\n2D Data Input Options:")
+    print("  1. Enter values manually")
+    print("  2. Use sample data  [[3,1,4],[1,5,9],[2,6,5]]")
+    choice = input("Choose an option: ").strip()
+
+    if choice == "2":
+        data_2d = [[3, 1, 4], [1, 5, 9], [2, 6, 5]]
+        print(f"Sample 2D data loaded: {data_2d}")
+    else:
+        rows = int(input("How many rows? "))
+        data_2d = []
+        for r in range(rows):
+            raw = input(f"  Enter values for row {r+1} (space-separated): ")
+            row = [float(x) if '.' in x else int(x) for x in raw.split()]
+            data_2d.append(row)
+
+    return data_2d
+
+
+def display_2d_grid(data_2d):
+    """
+    Displays a 2-D list in a formatted grid structure.
+    """
+    print("\n2D List (Grid View):")
+    col_width = 6
+    for row in data_2d:
+        print("  " + "".join(str(val).rjust(col_width) for val in row))
+
+
+# =====================================================================
+# I. Sorting Collection Data Types
+# =====================================================================
+
+def sort_1d_data(data, ascending=True):
+    """
+    Sorts a 1-D list using the list.sort() method (in-place).
+    Returns the sorted list and a copy for display.
+    ascending=True  → ascending order
+    ascending=False → descending order
+    """
+    data_copy = data[:]          # copy to avoid mutating original reference
+    data_copy.sort(reverse=not ascending)   # in-place sort
+    return data_copy
+
+
+def sort_2d_rows(data_2d, ascending=True):
+    """
+    Sorts rows in a 2-D list using the sorted() built-in function
+    (returns a new sorted list, leaving the original unchanged).
+    Each row is sorted independently.
+    """
+    sorted_2d = [sorted(row, reverse=not ascending) for row in data_2d]
+    return sorted_2d
+
+
+# =====================================================================
+# Menu-Driven Interface  (Requirement: UI)
+# =====================================================================
+
+def main():
+    """
+    Main entry point. Presents a menu-driven interface and routes
+    the user's choice to the appropriate function.
+    """
+    data    = []      # current 1-D dataset
+    data_2d = []      # current 2-D dataset
+
+    print("=" * 55)
+    print("   Welcome to the Data Analyzer and Transformer Program")
+    print("=" * 55)
+
+    while True:
+        print("\nMain Menu:")
+        print("  1. Input Data")
+        print("  2. Display Data Summary  (Built-in Functions)")
+        print("  3. Calculate Factorial   (Recursion)")
+        print("  4. Filter Data by Threshold  (Lambda Function)")
+        print("  5. Sort Data")
+        print("  6. Display Dataset Statistics  (Return Multiple Values)")
+        print("  7. Exit Program")
+
+        choice = input("\nPlease enter your choice: ").strip()
+
+        # ── Option 1 ─────────────────────────────────────────────────
+        if choice == "1":
+            data = input_1d_data()
+            print("\nData has been stored successfully!")
+
+        # ── Option 2 ─────────────────────────────────────────────────
+        elif choice == "2":
+            if not data:
+                print("\n[!] No data found. Please input data first (Option 1).")
+            else:
+                display_data_summary(data)
+                print_dataset_characteristics(
+                    total_values = dataset_summary["total_values"],
+                    overall_mean = dataset_summary["overall_mean"]
+                )
+
+        # ── Option 3 ─────────────────────────────────────────────────
+        elif choice == "3":
+            try:
+                n = int(input("\nEnter a number to calculate its factorial: "))
+                result = factorial(n)
+                print(f"\nFactorial of {n} is: {result}")
+            except ValueError as e:
+                print(f"\n[!] Error: {e}")
+
+        # ── Option 4 ─────────────────────────────────────────────────
+        elif choice == "4":
+            if not data:
+                print("\n[!] No data found. Please input data first (Option 1).")
+            else:
+                try:
+                    threshold = float(input(
+                        "\nEnter a threshold value to filter out data above this value: "))
+                    filtered = filter_by_threshold(data, threshold)
+                    print(f"\nFiltered Data (values >= {threshold}):")
+                    print(", ".join(str(v) for v in filtered))
+                    # also demonstrate map()
+                    doubled = double_values(data)
+                    print(f"\nDoubled values (via map + lambda): {doubled}")
+                except ValueError:
+                    print("\n[!] Invalid threshold. Please enter a number.")
+
+        # ── Option 5 ─────────────────────────────────────────────────
+        elif choice == "5":
+            if not data:
+                print("\n[!] No data found. Please input data first (Option 1).")
+            else:
+                print("\nChoose sorting option:")
+                print("  1. Ascending")
+                print("  2. Descending")
+                sort_choice = input("Enter your choice: ").strip()
+
+                if sort_choice == "1":
+                    sorted_data = sort_1d_data(data, ascending=True)
+                    print("\nSorted Data in Ascending Order:")
+                    print(", ".join(str(v) for v in sorted_data))
+                elif sort_choice == "2":
+                    sorted_data = sort_1d_data(data, ascending=False)
+                    print("\nSorted Data in Descending Order:")
+                    print(", ".join(str(v) for v in sorted_data))
+                else:
+                    print("\n[!] Invalid option.")
+
+        # ── Option 6 ─────────────────────────────────────────────────
+        elif choice == "6":
+            if not data:
+                print("\n[!] No data found. Please input data first (Option 1).")
+            else:
+                mn, mx, total, avg = get_dataset_statistics(data)   # multiple return
+                print("\nDataset Statistics:")
+                print(f"- Minimum value       : {mn}")
+                print(f"- Maximum value       : {mx}")
+                print(f"- Sum of all values   : {total}")
+                print(f"- Average value       : {avg}")
+                # Show duplicates and unique values (UDF demo)
+                dups = find_duplicates(data)
+                print(f"- Duplicate values    : {dups if dups else 'None'}")
+                display_unique_values(data)
+
+        # ── Option 7 ────────────────────────────────────────────────
+        elif choice == "7":
+            print("\nThank you for using the Data Analyzer and Transformer Program. Goodbye!")
+            break
+
+        else:
+            print("\n[!] Invalid choice. Please enter a number between 1 and 10.")
+
+
+# ── Entry Point ───────────────────────────────────────────────────────
+if __name__ == "__main__":
+    main()
